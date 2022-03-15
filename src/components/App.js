@@ -8,6 +8,12 @@ import EditAvatarPopup from "./EditAvatarPopup";
 import AddPlacePopup from "./AddPlacePopup";
 import api from "../../src/utils/api";
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
+import { Route, Switch, useHistory, Redirect } from "react-router-dom";
+import Register from "./Register";
+import Login from "./Login";
+import InfoTooltip from "./InfoTooltip";
+import PageNotFound from "./PageNotFound";
+import ProtectedRoute from "./ProtectedRoute"; // импортируем HOC
 
 function App() {
   const [isEditAvatarPopupOpen, setEditAvatarPopupOpen] = useState(false);
@@ -19,6 +25,9 @@ function App() {
   const [currentUser, setСurrentUser] = useState({ name: "Жак-Ив Кусто", about: "Исследователь океана", avatar: " " });
   // Стейт, отвечающий за индикацию отправки запроса для кнопки модальных окон
   const [isLoading, setIsLoading] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(true);
+
+  const history = useHistory();
 
   function handleCardLike(card) {
     // Снова проверяем, есть ли уже лайк на этой карточке
@@ -132,15 +141,29 @@ function App() {
       <CurrentUserContext.Provider value={currentUser}>
         <div className='page__container'>
           <Header />
-          <Main
-            onEditAvatar={handleEditAvatarClick}
-            onEditProfile={handleEditProfileClick}
-            onAddPlace={handleAddPlaceClick}
-            onCardClick={handleCardClick}
-            cards={cards}
-            onCardLike={handleCardLike}
-            onCardDelete={handleCardDelete}
-          />
+          <Switch>
+            <Route path='/sign-in'>
+              <Login />
+            </Route>
+            <Route path='/sign-up'>
+              <Register />
+            </Route>
+            <ProtectedRoute
+              path='/'
+              loggedIn={loggedIn}
+              component={Main}
+              onEditAvatar={handleEditAvatarClick}
+              onEditProfile={handleEditProfileClick}
+              onAddPlace={handleAddPlaceClick}
+              onCardClick={handleCardClick}
+              cards={cards}
+              onCardLike={handleCardLike}
+              onCardDelete={handleCardDelete}
+            />
+            <Route path='*'>
+              <PageNotFound />
+            </Route>
+          </Switch>
           <Footer />
           <EditProfilePopup
             isOpen={isEditProfilePopupOpen}
@@ -161,6 +184,7 @@ function App() {
             isLoading={isLoading}
           />
           <ImagePopup onClose={closeAllPopups} cardInfo={selectedCard} />
+          <InfoTooltip onClose={closeAllPopups} isOpen={isAddPlacePopupOpen}></InfoTooltip>
         </div>
       </CurrentUserContext.Provider>
     </div>

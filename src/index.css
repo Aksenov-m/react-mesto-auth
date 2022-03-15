@@ -53,3 +53,11 @@
 @import url(./blocks/card/__likes/card__likes.css);
 @import url(./blocks/popup/__button/_da.css);
 @import url(./blocks/popup/__title/_theme/popup__title_theme_trash.css);
+@import url(./blocks/not-found/not-found.css);
+@import url(./blocks/not-found/__title/not-found__title.css);
+@import url(./blocks/not-found/__text/not-found__text.css);
+@import url(./blocks/button/button.css);
+@import url(./blocks/authform/authform.css);
+@import url(./blocks/authform/__title/authform__title.css);
+@import url(./blocks/authform/__input/authform__input.css);
+@import url(./blocks/button/_type/_to-in/button_type_to-in.css);

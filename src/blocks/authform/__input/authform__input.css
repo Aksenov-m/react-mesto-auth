@@ -1,9 +1,9 @@
-.popup__input {
+.authform__input {
   font-style: normal;
   font-weight: normal;
   font-size: 14px;
   line-height: 17px;
-  color: #000000;
+  color: #ffff;
   margin: 0;
   padding: 0;
   outline: none;
@@ -12,18 +12,18 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+  border-bottom: 1px solid #cccccc;
   padding-bottom: 9px;
   width: 100%;
   margin-top: 30px;
   border-radius: 1px;
-  /* position: relative; */
+  background-color: #000000;
 }
 
-.popup__input:first-child {
+.authform__input:first-child {
   margin-top: 0;
 }
 
-.popup__input:focus {
+.authform__input:focus {
   outline: 2px solid rgb(0, 0, 255, 0.5);
 }

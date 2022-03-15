@@ -1,0 +1,17 @@
+.authform {
+  max-width: 430px;
+  width: 100%;
+  margin: 0 auto;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+@media screen and (max-width: 450px) {
+  .authform {
+    margin: 0 19px;
+    padding: 25px 22px;
+  }
+}
