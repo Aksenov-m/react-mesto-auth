@@ -1,12 +1,31 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, withRouter } from "react-router-dom";
 import AuthForm from "./AuthForm";
 
 // Функциональный компонент PopupWithForm
-function Register(props) {
+function Register({ handleRegister }) {
+  const [registerData, setRegisterData] = useState({
+    password: "",
+    email: "",
+  });
+  const { password, email } = registerData;
+
+  function handleChange(e) {
+    const { name, value } = e.target;
+    setRegisterData({
+      ...registerData,
+      [name]: value,
+    });
+  }
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    handleRegister(password, email).catch((e) => console.log(e.message));
+  }
+
   return (
     <main className='page__content'>
-      <AuthForm name='signup' title='Регистрация' buttonText='Зарегистрироваться'>
+      <AuthForm onSubmit={handleSubmit} name='signup' title='Регистрация' buttonText='Зарегистрироваться'>
         <input
           id='email'
           name='email'
@@ -17,6 +36,8 @@ function Register(props) {
           autoComplete='off'
           minLength='2'
           maxLength='40'
+          value={email}
+          onChange={handleChange}
         />
         <span className='popup__input-error popup__email-error'></span>
         <input
@@ -29,6 +50,8 @@ function Register(props) {
           autoComplete='off'
           minLength='2'
           maxLength='200'
+          value={password}
+          onChange={handleChange}
         />
         <span className='popup__input-error popup__password-error'></span>
       </AuthForm>
@@ -39,4 +62,4 @@ function Register(props) {
   );
 }
 
-export default Register;
+export default withRouter(Register);

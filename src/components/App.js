@@ -7,6 +7,7 @@ import EditProfilePopup from "./EditProfilePopup";
 import EditAvatarPopup from "./EditAvatarPopup";
 import AddPlacePopup from "./AddPlacePopup";
 import api from "../../src/utils/api";
+import * as mestoAuth from "../../src/utils/mestoAuth.js";
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
 import { Route, Switch, useHistory, Redirect } from "react-router-dom";
 import Register from "./Register";
@@ -25,9 +26,23 @@ function App() {
   const [currentUser, setСurrentUser] = useState({ name: "Жак-Ив Кусто", about: "Исследователь океана", avatar: " " });
   // Стейт, отвечающий за индикацию отправки запроса для кнопки модальных окон
   const [isLoading, setIsLoading] = useState(false);
-  const [loggedIn, setLoggedIn] = useState(true);
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [userData, setUserData] = useState({
+    username: "",
+    email: "",
+  });
 
   const history = useHistory();
+
+  function handleRegister(password, email) {
+    return mestoAuth.register(password, email).then((res) => {
+      if (res.data) {
+        history.push("/sign-in");
+      } else {
+        console.log(res.message);
+      }
+    });
+  }
 
   function handleCardLike(card) {
     // Снова проверяем, есть ли уже лайк на этой карточке
@@ -146,7 +161,7 @@ function App() {
               <Login />
             </Route>
             <Route path='/sign-up'>
-              <Register />
+              <Register handleRegister={handleRegister} />
             </Route>
             <ProtectedRoute
               path='/'
