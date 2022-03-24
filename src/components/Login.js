@@ -1,11 +1,34 @@
-import React from "react";
+import React, { useState } from "react";
 import AuthForm from "./AuthForm";
 
-// Функциональный компонент PopupWithForm
-function Login(props) {
+// Функциональный компонент Login
+function Login({ handleLogin }) {
+  const [userData, setUserState] = useState({
+    password: "",
+    email: "",
+  });
+
+  const { password, email } = userData;
+
+  function handleChange(e) {
+    const { name, value } = e.target;
+    setUserState({
+      ...userData,
+      [name]: value,
+    });
+  }
+  function handleSubmit(e) {
+    e.preventDefault();
+    debugger;
+    if (!password || !email) {
+      return;
+    }
+    handleLogin(password, email).catch((e) => console.log(e));
+  }
+
   return (
     <main className='page__content'>
-      <AuthForm name='signup' title='Вход' buttonText='Войти'>
+      <AuthForm onSubmit={handleSubmit} name='signup' title='Вход' buttonText='Войти'>
         <input
           id='email'
           name='email'
@@ -16,6 +39,8 @@ function Login(props) {
           autoComplete='off'
           minLength='2'
           maxLength='40'
+          value={email}
+          onChange={handleChange}
         />
         <span className='popup__input-error popup__email-error'></span>
         <input
@@ -28,6 +53,8 @@ function Login(props) {
           autoComplete='off'
           minLength='2'
           maxLength='200'
+          value={password}
+          onChange={handleChange}
         />
         <span className='popup__input-error popup__password-error'></span>
       </AuthForm>

@@ -28,11 +28,17 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
   const [userData, setUserData] = useState({
-    username: "",
+    password: "",
     email: "",
   });
 
   const history = useHistory();
+  useEffect(() => tokenCheck(), []);
+  useEffect(() => {
+    if (loggedIn) {
+      history.push("/");
+    }
+  }, [loggedIn]);
 
   function handleRegister(password, email) {
     return mestoAuth.register(password, email).then((res) => {
@@ -43,6 +49,43 @@ function App() {
       }
     });
   }
+
+  function handleLogin(password, email) {
+    debugger;
+    return mestoAuth.authorize(password, email).then((res) => {
+      if (!res) {
+        throw new Error("Что-то пошло не так!");
+      }
+      if (res.token) {
+        // const {
+        //   user: { password, email },
+        // } = res;
+        const userData = { password, email };
+        localStorage.setItem("jwt", res.token);
+        setUserData(userData);
+        setLoggedIn(true);
+        history.push("/");
+      }
+    });
+  }
+
+  const tokenCheck = () => {
+    if (localStorage.getItem("jwt")) {
+      let jwt = localStorage.getItem("jwt");
+      mestoAuth.getContent(jwt).then((res) => {
+        if (res) {
+          // здесь можем получить данные пользователя!
+          const userData = {
+            email: res.email,
+          };
+          localStorage.setItem("jwt", res.token);
+          setUserData(userData);
+          setLoggedIn(true);
+          history.push("/");
+        }
+      });
+    }
+  };
 
   function handleCardLike(card) {
     // Снова проверяем, есть ли уже лайк на этой карточке
@@ -155,10 +198,10 @@ function App() {
     <div className='App'>
       <CurrentUserContext.Provider value={currentUser}>
         <div className='page__container'>
-          <Header />
+          <Header userData={userData} />
           <Switch>
             <Route path='/sign-in'>
-              <Login />
+              <Login handleLogin={handleLogin} />
             </Route>
             <Route path='/sign-up'>
               <Register handleRegister={handleRegister} />

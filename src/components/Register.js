@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link, withRouter } from "react-router-dom";
 import AuthForm from "./AuthForm";
 
-// Функциональный компонент PopupWithForm
+// Функциональный компонент Register
 function Register({ handleRegister }) {
   const [registerData, setRegisterData] = useState({
     password: "",
@@ -20,7 +20,7 @@ function Register({ handleRegister }) {
 
   function handleSubmit(e) {
     e.preventDefault();
-    handleRegister(password, email).catch((e) => console.log(e.message));
+    handleRegister(password, email).catch((e) => console.log(e));
   }
 
   return (
