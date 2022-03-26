@@ -1,44 +1,22 @@
-import React, { useRef, useEffect } from "react";
-import Popup from "./Popup";
+import success from "../images/success.svg";
+import fail from "../images/fail.svg";
 
 function InfoTooltip(props) {
-  const avatarRef = useRef();
-
-  useEffect(() => {
-    avatarRef.current.value = "";
-  }, [props.onClose]);
-
-  function handleSubmit(e) {
-    e.preventDefault();
-
-    props.onUpdateAvatar({
-      avatar: avatarRef.current.value,
-    });
-  }
-
   return (
-    <Popup
-      name='avatar'
-      title='Обновить аватар'
-      buttonText='Сохранить'
-      loadingButtonText='Сохранение...'
-      isOpen={props.isOpen}
-      onClose={props.onClose}
-      onSubmit={handleSubmit}
-      isLoading={props.isLoading}
-    >
-      <input
-        id='popup__avatar'
-        name='avatarlink'
-        className='popup__input popup__input_string_avatar-link'
-        type='url'
-        placeholder='Ссылка на картинку'
-        required
-        autoComplete='off'
-        ref={avatarRef}
-      />
-      <span className='popup__input-error popup__avatar-error'></span>
-    </Popup>
+    <div className={`popup popup_type_${props.name} ${props.isOpen ? "popup_opened" : ""}`}>
+      <div className='popup__container'>
+        <button
+          className='popup__close-button link'
+          type='button'
+          aria-label='closePopup'
+          onClick={props.onClose}
+        ></button>
+        <img className='popup__image-info' src={`${props.isRegister ? success : fail}`} alt='' />
+        <p className='popup__text'>{`${
+          props.isRegister ? "Вы успешно зарегистрировались!" : "Что-то пошло не так!Попробуйте ещё раз."
+        }`}</p>
+      </div>
+    </div>
   );
 }
 

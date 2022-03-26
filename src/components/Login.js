@@ -19,7 +19,6 @@ function Login({ handleLogin }) {
   }
   function handleSubmit(e) {
     e.preventDefault();
-    debugger;
     if (!password || !email) {
       return;
     }

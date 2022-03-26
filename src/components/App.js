@@ -20,12 +20,15 @@ function App() {
   const [isEditAvatarPopupOpen, setEditAvatarPopupOpen] = useState(false);
   const [isEditProfilePopupOpen, setEditProfilePopupOpen] = useState(false);
   const [isAddPlacePopupOpen, setAddPlacePopupOpen] = useState(false);
+  const [isInfoTooltipPopupOpen, setInfoTooltipPopupOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState({});
   const [cards, setCards] = useState([]);
   // Стейт, отвечающий за данные текущего пользователя
   const [currentUser, setСurrentUser] = useState({ name: "Жак-Ив Кусто", about: "Исследователь океана", avatar: " " });
   // Стейт, отвечающий за индикацию отправки запроса для кнопки модальных окон
   const [isLoading, setIsLoading] = useState(false);
+  // Стейт, который информирует пользователя об успешной (или не очень) регистрации
+  const [isRegister, setIsRegister] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
   const [userData, setUserData] = useState({
     password: "",
@@ -51,7 +54,6 @@ function App() {
   }
 
   function handleLogin(password, email) {
-    debugger;
     return mestoAuth.authorize(password, email).then((res) => {
       if (!res) {
         throw new Error("Что-то пошло не так!");
@@ -74,9 +76,10 @@ function App() {
       let jwt = localStorage.getItem("jwt");
       mestoAuth.getContent(jwt).then((res) => {
         if (res) {
+          debugger;
           // здесь можем получить данные пользователя!
           const userData = {
-            email: res.email,
+            email: res.data.email,
           };
           localStorage.setItem("jwt", res.token);
           setUserData(userData);
@@ -145,6 +148,7 @@ function App() {
     setEditProfilePopupOpen(false);
     setEditAvatarPopupOpen(false);
     setSelectedCard({});
+    setInfoTooltipPopupOpen(false);
   }
 
   function handleCardClick(data) {
@@ -152,7 +156,6 @@ function App() {
   }
 
   function handleUpdateUser(data) {
-    debugger;
     setIsLoading(true);
     api
       .setUserInfo(data)
@@ -242,7 +245,12 @@ function App() {
             isLoading={isLoading}
           />
           <ImagePopup onClose={closeAllPopups} cardInfo={selectedCard} />
-          <InfoTooltip onClose={closeAllPopups} isOpen={isAddPlacePopupOpen}></InfoTooltip>
+          <InfoTooltip
+            name='infotooltip'
+            onClose={closeAllPopups}
+            isOpen={isInfoTooltipPopupOpen}
+            isRegister={isRegister}
+          ></InfoTooltip>
         </div>
       </CurrentUserContext.Provider>
     </div>
