@@ -20,7 +20,7 @@ function Register({ handleRegister }) {
 
   function handleSubmit(e) {
     e.preventDefault();
-    handleRegister(password, email).catch((e) => console.log(e));
+    handleRegister(password, email);
   }
 
   return (

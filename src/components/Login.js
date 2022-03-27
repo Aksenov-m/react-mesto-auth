@@ -22,7 +22,7 @@ function Login({ handleLogin }) {
     if (!password || !email) {
       return;
     }
-    handleLogin(password, email).catch((e) => console.log(e));
+    handleLogin(password, email);
   }
 
   return (

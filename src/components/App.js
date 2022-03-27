@@ -44,48 +44,56 @@ function App() {
   }, [loggedIn]);
 
   function handleRegister(password, email) {
-    return mestoAuth.register(password, email).then((res) => {
-      if (res.data) {
-        history.push("/sign-in");
-        setIsRegister(true);
-        setInfoTooltipPopupOpen(true);
-      } else {
-        setInfoTooltipPopupOpen(true);
-        console.log(res.message);
-      }
-    });
+    return mestoAuth
+      .register(password, email)
+      .then((res) => {
+        if (res.data) {
+          history.push("/sign-in");
+          setIsRegister(true);
+          setInfoTooltipPopupOpen(true);
+        } else {
+          setInfoTooltipPopupOpen(true);
+        }
+      })
+      .catch((res) => console.log(res.message));
   }
 
   function handleLogin(password, email) {
-    return mestoAuth.authorize(password, email).then((res) => {
-      if (!res) {
-        throw new Error("Что-то пошло не так!");
-      }
-      if (res.token) {
-        const userData = { password, email };
-        localStorage.setItem("jwt", res.token);
-        setUserData(userData);
-        setLoggedIn(true);
-        history.push("/");
-      }
-    });
-  }
-
-  const tokenCheck = () => {
-    if (localStorage.getItem("jwt")) {
-      let jwt = localStorage.getItem("jwt");
-      mestoAuth.getContent(jwt).then((res) => {
-        if (res) {
-          // здесь можем получить данные пользователя!
-          const userData = {
-            email: res.data.email,
-          };
+    return mestoAuth
+      .authorize(password, email)
+      .then((res) => {
+        if (!res) {
+          throw new Error("Что-то пошло не так!");
+        }
+        if (res.token) {
+          const userData = { password, email };
           localStorage.setItem("jwt", res.token);
           setUserData(userData);
           setLoggedIn(true);
           history.push("/");
         }
-      });
+      })
+      .catch((res) => console.log(res.message));
+  }
+
+  const tokenCheck = () => {
+    if (localStorage.getItem("jwt")) {
+      let jwt = localStorage.getItem("jwt");
+      mestoAuth
+        .getContent(jwt)
+        .then((res) => {
+          if (res) {
+            // здесь можем получить данные пользователя!
+            const userData = {
+              email: res.data.email,
+            };
+            localStorage.setItem("jwt", res.token);
+            setUserData(userData);
+            setLoggedIn(true);
+            history.push("/");
+          }
+        })
+        .catch((res) => console.log(res.message));
     }
   };
 
@@ -118,22 +126,18 @@ function App() {
   }
 
   useEffect(() => {
-    api
-      .getInitialCards()
-      .then((data) => {
+    if (loggedIn) {
+      api.getInitialCards().then((data) => {
         setCards(data);
-      })
-      .catch((err) => alert(err));
-  }, []);
-
-  useEffect(() => {
-    api
-      .getUserInfo()
-      .then((user) => {
-        setСurrentUser(user);
-      })
-      .catch((err) => alert(err));
-  }, []);
+      });
+      api
+        .getUserInfo()
+        .then((user) => {
+          setСurrentUser(user);
+        })
+        .catch((err) => alert(err));
+    }
+  }, [loggedIn]);
 
   function handleEditAvatarClick() {
     setEditAvatarPopupOpen(true);
