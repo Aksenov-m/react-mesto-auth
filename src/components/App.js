@@ -9,7 +9,7 @@ import AddPlacePopup from "./AddPlacePopup";
 import api from "../../src/utils/api";
 import * as mestoAuth from "../../src/utils/mestoAuth.js";
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
-import { Route, Switch, useHistory, Redirect } from "react-router-dom";
+import { Route, Switch, useHistory } from "react-router-dom";
 import Register from "./Register";
 import Login from "./Login";
 import InfoTooltip from "./InfoTooltip";
@@ -47,7 +47,10 @@ function App() {
     return mestoAuth.register(password, email).then((res) => {
       if (res.data) {
         history.push("/sign-in");
+        setIsRegister(true);
+        setInfoTooltipPopupOpen(true);
       } else {
+        setInfoTooltipPopupOpen(true);
         console.log(res.message);
       }
     });
@@ -59,9 +62,6 @@ function App() {
         throw new Error("Что-то пошло не так!");
       }
       if (res.token) {
-        // const {
-        //   user: { password, email },
-        // } = res;
         const userData = { password, email };
         localStorage.setItem("jwt", res.token);
         setUserData(userData);
@@ -76,7 +76,6 @@ function App() {
       let jwt = localStorage.getItem("jwt");
       mestoAuth.getContent(jwt).then((res) => {
         if (res) {
-          debugger;
           // здесь можем получить данные пользователя!
           const userData = {
             email: res.data.email,
@@ -89,6 +88,11 @@ function App() {
       });
     }
   };
+
+  function signOut() {
+    localStorage.removeItem("jwt", "password", "email");
+    setUserData({ password: "", email: "" });
+  }
 
   function handleCardLike(card) {
     // Снова проверяем, есть ли уже лайк на этой карточке
@@ -201,7 +205,7 @@ function App() {
     <div className='App'>
       <CurrentUserContext.Provider value={currentUser}>
         <div className='page__container'>
-          <Header userData={userData} />
+          <Header userData={userData} signOut={signOut} />
           <Switch>
             <Route path='/sign-in'>
               <Login handleLogin={handleLogin} />

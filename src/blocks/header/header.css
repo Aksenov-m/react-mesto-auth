@@ -28,3 +28,9 @@
     padding: 28px 27px 32px 27px;
   }
 }
+
+@media screen and (max-width: 450px) {
+  .header {
+    flex-direction: column;
+  }
+}

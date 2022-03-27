@@ -5,8 +5,9 @@ import { Route, Link, useHistory } from "react-router-dom";
 function Header(props) {
   let { email } = props.userData;
   const history = useHistory();
+
   function signOut() {
-    localStorage.removeItem("jwt");
+    props.signOut();
     history.push("/sign-in");
   }
 
@@ -14,7 +15,9 @@ function Header(props) {
     <header className='header section page__header'>
       <img className='header__logo' src={logo} alt='Логотип места России.' />
       <div className='header__info'>
-        <p className='header__text'>{email}</p>
+        <Route path='/'>
+          <p className='header__text'>{email}</p>
+        </Route>
         <Route path='/sign-up'>
           <Link className='header__text link' to='/sign-in'>
             Войти
@@ -26,9 +29,9 @@ function Header(props) {
           </Link>
         </Route>
         <Route exact path='/'>
-          <a className='header__button link' onClick={signOut}>
+          <Link className='header__button link' onClick={signOut}>
             Выйти
-          </a>
+          </Link>
         </Route>
       </div>
     </header>
