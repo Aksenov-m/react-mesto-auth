@@ -53,6 +53,7 @@ function App() {
           setInfoTooltipPopupOpen(true);
         } else {
           setInfoTooltipPopupOpen(true);
+          setIsRegister(false);
         }
       })
       .catch((res) => console.log(res.message));
@@ -63,6 +64,8 @@ function App() {
       .authorize(password, email)
       .then((res) => {
         if (!res) {
+          setInfoTooltipPopupOpen(true);
+          setIsRegister(false);
           throw new Error("Что-то пошло не так!");
         }
         if (res.token) {
@@ -127,9 +130,12 @@ function App() {
 
   useEffect(() => {
     if (loggedIn) {
-      api.getInitialCards().then((data) => {
-        setCards(data);
-      });
+      api
+        .getInitialCards()
+        .then((data) => {
+          setCards(data);
+        })
+        .catch((err) => alert(err));
       api
         .getUserInfo()
         .then((user) => {
