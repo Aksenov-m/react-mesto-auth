@@ -86,6 +86,7 @@ function App() {
         .getContent(jwt)
         .then((res) => {
           if (res) {
+            debugger
             // здесь можем получить данные пользователя!
             const userData = {
               email: res.data.email,
@@ -174,6 +175,7 @@ function App() {
     api
       .setUserInfo(data)
       .then((data) => {
+        debugger
         setСurrentUser(data);
         closeAllPopups();
       })

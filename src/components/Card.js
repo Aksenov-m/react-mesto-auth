@@ -20,6 +20,7 @@ function Card(props) {
   }
 
   function handleLikeClick() {
+    debugger
     props.onCardLike(props.info);
   }
 
